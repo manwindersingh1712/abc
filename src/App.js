@@ -10,11 +10,13 @@ import { getToken } from "./api";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import { JoiningScreen } from "./components/JoiningScreen";
+import logo from "./public/images/logo.png";
 
 const primary = "#3E84F6";
 
 const width = 400;
-const height = (width * 2) / 3;
+// const height = (width * 2) / 3;
+const height = 200;
 const borderRadius = 8;
 
 const chunk = (arr) => {
@@ -49,7 +51,6 @@ const ExternalVideo = () => {
 
     switch (status) {
       case "stopped":
-        console.log("stopped in switch");
         externalPlayer.current.src = null;
         setVideoInfo({ link: null, playing: false });
         break;
@@ -95,94 +96,11 @@ const ExternalVideo = () => {
       <Title title={"Externam Video"} />
 
       <video
-        style={{ borderRadius, height, width, backgroundColor: "black" }}
+        style={{ borderRadius, height, width, backgroundColor: "#373750" }}
         autoPlay
         ref={externalPlayer}
         src={link}
       />
-    </div>
-  );
-};
-
-const MessageList = ({ messages }) => {
-  return (
-    <div>
-      {messages?.map((message, i) => {
-        const { senderName, message: text, timestamp } = message;
-
-        return (
-          <div
-            style={{
-              margin: 8,
-              backgroundColor: "darkblue",
-              borderRadius: 8,
-              overflow: "hidden",
-              padding: 8,
-              color: "#fff",
-            }}
-            key={i}
-          >
-            <p style={{ margin: 0, padding: 0, fontStyle: "italic" }}>
-              {senderName}
-            </p>
-            <h3 style={{ margin: 0, padding: 0, marginTop: 4 }}>{text}</h3>
-            <p
-              style={{
-                margin: 0,
-                padding: 0,
-                opacity: 0.6,
-                marginTop: 4,
-              }}
-            >
-              {formatAMPM(new Date(timestamp))}
-            </p>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-const MeetingChat = ({ tollbarHeight }) => {
-  const { publish, messages } = usePubSub("CHAT", {});
-  const [message, setMessage] = useState("");
-  return (
-    <div
-      style={{
-        marginLeft: borderRadius,
-        width: 400,
-        backgroundColor: primary,
-        overflowY: "scroll",
-        borderRadius,
-        height: `calc(100vh - ${tollbarHeight + 2 * borderRadius}px)`,
-        padding: borderRadius,
-      }}
-    >
-      <Title title={"Chat"} />
-
-      <div style={{ display: "flex" }}>
-        <input
-          value={message}
-          onChange={(e) => {
-            const v = e.target.value;
-            setMessage(v);
-          }}
-        />
-        <button
-          className={"button default"}
-          onClick={() => {
-            const m = message;
-
-            if (m.length) {
-              publish(m, { persist: true });
-              setMessage("");
-            }
-          }}
-        >
-          Send
-        </button>
-      </div>
-      <MessageList messages={messages} />
     </div>
   );
 };
@@ -197,7 +115,6 @@ const ParticipantView = ({ participantId }) => {
 
   const {
     displayName,
-    participant,
     webcamStream,
     micStream,
     screenShareStream,
@@ -207,15 +124,6 @@ const ParticipantView = ({ participantId }) => {
     isLocal,
     isActiveSpeaker,
     isMainParticipant,
-    switchTo,
-    pinState,
-    setQuality,
-    enableMic,
-    disableMic,
-    enableWebcam,
-    disableWebcam,
-    pin,
-    unpin,
   } = useParticipant(participantId, {
     onStreamEnabled,
     onStreamDisabled,
@@ -279,8 +187,6 @@ const ParticipantView = ({ participantId }) => {
     <div
       style={{
         width,
-        backgroundColor: primary,
-        borderRadius: borderRadius,
         overflow: "hidden",
         margin: borderRadius,
         padding: borderRadius,
@@ -297,9 +203,9 @@ const ParticipantView = ({ participantId }) => {
           position: "relative",
           borderRadius: borderRadius,
           overflow: "hidden",
-          backgroundColor: "pink",
+          backgroundColor: "#373750",
           width: "100%",
-          height: 300,
+          height: "600px",
         }}
       >
         <div
@@ -310,7 +216,7 @@ const ParticipantView = ({ participantId }) => {
             width={"100%"}
             ref={webcamRef}
             style={{
-              backgroundColor: "black",
+              backgroundColor: "#373750",
               position: "absolute",
               top: 0,
               left: 0,
@@ -329,126 +235,17 @@ const ParticipantView = ({ participantId }) => {
           >
             <p
               style={{
-                color: webcamOn ? "green" : "red",
+                color: "white",
                 fontSize: 16,
                 fontWeight: "bold",
                 opacity: 1,
               }}
             >
-              WEB CAM
-            </p>
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              top: 10,
-              left: 10,
-            }}
-          >
-            <button
-              className="button blue"
-              style={
-                {
-                  // height: 50,
-                  // width: 200,
-                }
-              }
-              onClick={async () => {
-                const meetingId = prompt(
-                  `Please enter meeting id where you want to switch ${displayName}`
-                );
-                const token = await getToken();
-                if (meetingId && token) {
-                  try {
-                    await switchTo({
-                      meetingId,
-                      payload: "Im Switching",
-                      token: token,
-                    });
-                  } catch (e) {
-                    console.log("swithc To Error", e);
-                  }
-                } else {
-                  alert("Empty meetingId!");
-                }
-              }}
-            >
-              Switch Participant
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: borderRadius,
-          position: "relative",
-          borderRadius: borderRadius,
-          overflow: "hidden",
-          backgroundColor: "lightgreen",
-          width: "100%",
-          height: 300,
-        }}
-      >
-        <div
-          style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-        >
-          <video
-            height={"100%"}
-            width={"100%"}
-            ref={screenShareRef}
-            style={{
-              backgroundColor: "black",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              objectFit: "contain",
-            }}
-            autoPlay
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: borderRadius,
-              right: borderRadius,
-            }}
-          >
-            <p
-              style={{
-                color: screenShareOn ? "green" : "red",
-                fontSize: 16,
-                fontWeight: "bold",
-                opacity: 1,
-              }}
-            >
-              SCREEN SHARING
+              {displayName}
             </p>
           </div>
         </div>
       </div>
-      <table>
-        {[
-          { k: "Name", v: displayName },
-          { k: "webcamOn", v: webcamOn ? "YES" : "NO" },
-          { k: "micOn", v: micOn ? "YES" : "NO" },
-          { k: "screenShareOn", v: screenShareOn ? "YES" : "NO" },
-          { k: "isLocal", v: isLocal ? "YES" : "NO" },
-          { k: "isActiveSpeaker", v: isActiveSpeaker ? "YES" : "NO" },
-          { k: "isMainParticipant", v: isMainParticipant ? "YES" : "NO" },
-        ].map(({ k, v }) => (
-          <tr key={k}>
-            <td style={{ border: "1px solid #fff", padding: 4 }}>
-              <h3 style={{ margin: 0, padding: 0, color: "#fff" }}>{k}</h3>
-            </td>
-            <td style={{ border: "1px solid #fff", padding: 4 }}>
-              <h3 style={{ margin: 0, padding: 0, color: "#fff" }}>{v}</h3>
-            </td>
-          </tr>
-        ))}
-      </table>
     </div>
   );
 };
@@ -465,7 +262,6 @@ const ParticipantsView = () => {
         padding: borderRadius,
       }}
     >
-      <Title dark title={"Participants"} />
       {chunk([...participants.keys()]).map((k) => (
         <div style={{ display: "flex" }}>
           {k.map((l) => (
@@ -790,16 +586,6 @@ function MeetingView({ onNewMeetingIdToken, onMeetingLeave }) {
       },
     ]);
   };
-  const handleStopLiveStream = () => {
-    stopLivestream();
-  };
-  const handleStartRecording = () => {
-    startRecording();
-  };
-  const handleStopRecording = () => {
-    stopRecording();
-  };
-
   const tollbarHeight = 120;
 
   return (
@@ -807,81 +593,9 @@ function MeetingView({ onNewMeetingIdToken, onMeetingLeave }) {
       style={{
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#D6E9FE",
+        backgroundColor: "#fff4f5",
       }}
     >
-      <div style={{ height: tollbarHeight }}>
-        <button className={"button red"} onClick={leave}>
-          LEAVE
-        </button>
-        <button className={"button blue"} onClick={toggleMic}>
-          toggleMic
-        </button>
-        <button className={"button blue"} onClick={toggleWebcam}>
-          toggleWebcam
-        </button>
-        <button className={"button blue"} onClick={toggleScreenShare}>
-          toggleScreenShare
-        </button>
-        <button className={"button blue"} onClick={handlestartVideo}>
-          startVideo
-        </button>
-        <button className={"button blue"} onClick={handlestopVideo}>
-          stopVideo
-        </button>
-        <button className={"button blue"} onClick={handleresumeVideo}>
-          resumeVideo
-        </button>
-        <button className={"button blue"} onClick={handlepauseVideo}>
-          pauseVideo
-        </button>
-        <button className={"button blue"} onClick={handlesseekVideo}>
-          seekVideo
-        </button>
-        <button className={"button blue"} onClick={handleStartLiveStream}>
-          Start Live Stream
-        </button>
-        <button className={"button blue"} onClick={handleStopLiveStream}>
-          Stop Live Stream
-        </button>
-        <button className={"button blue"} onClick={handleStartRecording}>
-          start recording
-        </button>
-        <button className={"button blue"} onClick={handleStopRecording}>
-          stop recording
-        </button>
-        <button
-          className={"button blue"}
-          onClick={() => setParticipantViewVisible((s) => !s)}
-        >
-          Switch to {participantViewVisible ? "Connections" : "Participants"}{" "}
-          view
-        </button>
-
-        <button
-          className={"button blue"}
-          onClick={async () => {
-            const meetingId = prompt(
-              `Please enter meeting id where you want Connect`
-            );
-            if (meetingId) {
-              try {
-                await connectTo({
-                  meetingId,
-                  payload: "This is Testing Payload",
-                });
-              } catch (e) {
-                console.log("Connect to Error", e);
-              }
-            } else {
-              alert("Empty meetingId!");
-            }
-          }}
-        >
-          Make Connections
-        </button>
-      </div>
-      <h1>Meeting id is : {meetingId}</h1>
       <div style={{ display: "flex", flex: 1 }}>
         <div
           style={{
@@ -894,10 +608,134 @@ function MeetingView({ onNewMeetingIdToken, onMeetingLeave }) {
           }}
         >
           <ExternalVideo />
-          {/* <ParticipantsView /> */}
           {participantViewVisible ? <ParticipantsView /> : <ConnectionsView />}
         </div>
-        <MeetingChat tollbarHeight={tollbarHeight} />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: "80px",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "120px",
+          position: "relative",
+        }}
+      >
+        {/* <button className={"button red"} onClick={leave}>
+          LEAVE
+        </button> */}
+        <img
+          src={logo}
+          width={50}
+          height={40}
+          style={{
+            position: "absolute",
+            right: 50,
+          }}
+        />
+        <div
+          style={{
+            display: "flex",
+            gap: "50px",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "120px",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              width: "60px",
+              height: "60px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              border: "1px solid #373750",
+              borderRadius: "50%",
+              cursor: "pointer",
+              backgroundColor: !localMicOn && "red",
+            }}
+            onClick={toggleMic}
+          >
+            {localMicOn ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="#373750"
+                viewBox="0 0 640 512"
+              >
+                <path d="M412.6 182c-10.28-8.334-25.41-6.867-33.75 3.402c-8.406 10.24-6.906 25.35 3.375 33.74C393.5 228.4 400 241.8 400 255.1c0 14.17-6.5 27.59-17.81 36.83c-10.28 8.396-11.78 23.5-3.375 33.74c4.719 5.806 11.62 8.802 18.56 8.802c5.344 0 10.75-1.779 15.19-5.399C435.1 311.5 448 284.6 448 255.1S435.1 200.4 412.6 182zM473.1 108.2c-10.22-8.334-25.34-6.898-33.78 3.34c-8.406 10.24-6.906 25.35 3.344 33.74C476.6 172.1 496 213.3 496 255.1s-19.44 82.1-53.31 110.7c-10.25 8.396-11.75 23.5-3.344 33.74c4.75 5.775 11.62 8.771 18.56 8.771c5.375 0 10.75-1.779 15.22-5.431C518.2 366.9 544 313 544 255.1S518.2 145 473.1 108.2zM534.4 33.4c-10.22-8.334-25.34-6.867-33.78 3.34c-8.406 10.24-6.906 25.35 3.344 33.74C559.9 116.3 592 183.9 592 255.1s-32.09 139.7-88.06 185.5c-10.25 8.396-11.75 23.5-3.344 33.74C505.3 481 512.2 484 519.2 484c5.375 0 10.75-1.779 15.22-5.431C601.5 423.6 640 342.5 640 255.1S601.5 88.34 534.4 33.4zM301.2 34.98c-11.5-5.181-25.01-3.076-34.43 5.29L131.8 160.1H48c-26.51 0-48 21.48-48 47.96v95.92c0 26.48 21.49 47.96 48 47.96h83.84l134.9 119.8C272.7 477 280.3 479.8 288 479.8c4.438 0 8.959-.9314 13.16-2.835C312.7 471.8 320 460.4 320 447.9V64.12C320 51.55 312.7 40.13 301.2 34.98z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="#fff"
+                viewBox="0 0 576 512"
+              >
+                <path d="M301.2 34.85c-11.5-5.188-25.02-3.122-34.44 5.253L131.8 160H48c-26.51 0-48 21.49-48 47.1v95.1c0 26.51 21.49 47.1 48 47.1h83.84l134.9 119.9c5.984 5.312 13.58 8.094 21.26 8.094c4.438 0 8.972-.9375 13.17-2.844c11.5-5.156 18.82-16.56 18.82-29.16V64C319.1 51.41 312.7 40 301.2 34.85zM513.9 255.1l47.03-47.03c9.375-9.375 9.375-24.56 0-33.94s-24.56-9.375-33.94 0L480 222.1L432.1 175c-9.375-9.375-24.56-9.375-33.94 0s-9.375 24.56 0 33.94l47.03 47.03l-47.03 47.03c-9.375 9.375-9.375 24.56 0 33.94c9.373 9.373 24.56 9.381 33.94 0L480 289.9l47.03 47.03c9.373 9.373 24.56 9.381 33.94 0c9.375-9.375 9.375-24.56 0-33.94L513.9 255.1z" />
+              </svg>
+            )}
+          </div>
+
+          <div onClick={leave} style={{ cursor: "pointer" }}>
+            <svg
+              id="Layer_1"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              width="60px"
+              height="60px"
+              viewBox="0 0 122.88 122.88"
+            >
+              <defs></defs>
+              <title>end-call</title>
+              <path
+                fill="#ff3b30"
+                fillRule="evenodd"
+                d="M104.89,104.89a61.47,61.47,0,1,1,18-43.45,61.21,61.21,0,0,1-18,43.45ZM74.59,55.72a49.79,49.79,0,0,0-12.38-2.07A41.52,41.52,0,0,0,48,55.8a1.16,1.16,0,0,0-.74.67,4.53,4.53,0,0,0-.27,1.7,16.14,16.14,0,0,0,.2,2c.42,3,.93,6.8-2.42,8l-.22.07-12,3.24-.12,0A4.85,4.85,0,0,1,28,70a11.44,11.44,0,0,1-2.68-4.92,11,11,0,0,1,.42-6.93A23.69,23.69,0,0,1,29,52.39,21.52,21.52,0,0,1,36.55,46a42.74,42.74,0,0,1,10.33-3.6l.29-.07C49,42,51,41.48,53.08,41.17a62.76,62.76,0,0,1,25.14,1.59c6.87,2,13,5.43,16.8,10.7a13.88,13.88,0,0,1,2.92,9.59,12.64,12.64,0,0,1-4.88,8.43,1.34,1.34,0,0,1-1.26.28L78.6,68.38A3.69,3.69,0,0,1,75.41,66a7.73,7.73,0,0,1-.22-4,15.21,15.21,0,0,1,.22-1.6c.3-1.89.63-4.06-.89-4.72Z"
+              />
+            </svg>
+          </div>
+
+          <div
+            style={{
+              width: "60px",
+              height: "60px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              border: "1px solid #373750",
+              borderRadius: "50%",
+              cursor: "pointer",
+              backgroundColor: !localWebcamOn && "red",
+            }}
+            onClick={toggleWebcam}
+          >
+            {localWebcamOn ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="#373750"
+                viewBox="0 0 576 512"
+              >
+                <path d="M384 112v288c0 26.51-21.49 48-48 48h-288c-26.51 0-48-21.49-48-48v-288c0-26.51 21.49-48 48-48h288C362.5 64 384 85.49 384 112zM576 127.5v256.9c0 25.5-29.17 40.39-50.39 25.79L416 334.7V177.3l109.6-75.56C546.9 87.13 576 102.1 576 127.5z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="#fff"
+                viewBox="0 0 640 512"
+              >
+                <path d="M32 399.1c0 26.51 21.49 47.1 47.1 47.1h287.1c19.57 0 36.34-11.75 43.81-28.56L32 121.8L32 399.1zM630.8 469.1l-89.21-69.92l15.99 11.02c21.22 14.59 50.41-.2971 50.41-25.8V127.5c0-25.41-29.07-40.37-50.39-25.76l-109.6 75.56l.0001 148.5l-32-25.08l.0001-188.7c0-26.51-21.49-47.1-47.1-47.1H113.9L38.81 5.111C34.41 1.673 29.19 0 24.03 0C16.91 0 9.84 3.158 5.121 9.189C-3.066 19.63-1.249 34.72 9.189 42.89l591.1 463.1c10.5 8.203 25.57 6.328 33.69-4.078C643.1 492.4 641.2 477.3 630.8 469.1z" />
+              </svg>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

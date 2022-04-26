@@ -19,10 +19,9 @@ export const getToken = async () => {
 };
 
 export const createMeeting = async ({ token }) => {
-  const url = `${API_BASE_URL}/api/meetings`;
+  const url = `${API_AUTH_URL}/create-meeting`;
   const options = {
     method: "POST",
-    headers: { Authorization: token, "Content-Type": "application/json" },
   };
 
   const { meetingId } = await fetch(url, options)
@@ -34,7 +33,7 @@ export const createMeeting = async ({ token }) => {
 
 export const validateMeeting = async ({ meetingId, token }) => {
 
-  const url = `${API_BASE_URL}/api/meetings/${meetingId}`;
+  const url = `${API_AUTH_URL}/validate-meeting/${meetingId}`;
 
   const options = {
     method: "POST",

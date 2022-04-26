@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&family=Mulish:wght@200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -476,4 +482,111 @@ div .button {
   -webkit-box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* joining screen */
+.join_container {
+  min-width: calc(100vw - 10%);
+  height: calc(100%-10px);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.ready_to_join_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ready_to_join_container .head {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 56px;
+  letter-spacing: -1px;
+  color: #4b4b6d;
+}
+
+.ready_to_join_container button {
+  font-family: "Montserrat", sans-serif;
+  color: white;
+  background-color: #373750;
+  border-width: 0;
+  padding: 20px 44px;
+  border-radius: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Meeting details */
+.meeting_details_container {
+  min-width: calc(100vw - 10%);
+  height: calc(100%-10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.meeting_details_container .input_container {
+  border: 1px solid #727382;
+  border-radius: 4px;
+  padding: 10px;
+  min-width: 500px;
+  position: relative;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 50px 0 0;
+}
+
+.input_label_head {
+  position: absolute;
+  top: -10px;
+  color: #373750;
+  font-size: 14px;
+  background-color: #fff4f5;
+}
+
+.input_container input {
+  width: 100%;
+  background-color: transparent;
+  border-width: 0;
+  font-family: "Open Sans" !important;
+  font-size: 18px;
+  font-weight: 500;
+  color: #727382;
+}
+
+.input_container input:focus {
+  outline-width: 0;
+}
+
+.input_container button {
+  background-color: #373750;
+  color: #fff;
+  padding: 10px 20px;
+  border-width: 0;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.input_container button.disabled {
+  opacity: 0.8;
+}
+
+.subhead {
+  color: #373750;
+  font-size: 14px;
+  background-color: #fff4f5;
+  margin-top: 8px;
+}
+.input_container span {
+  position: relative;
+  top: 2px;
 }
